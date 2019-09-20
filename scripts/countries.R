@@ -178,5 +178,64 @@ summarise(
 gapminder %>%
         group_by(continent) %>% 
         summarise (mean_pop = mean(pop),median_pop = median (pop))
-        
+    
+#Arrange
 
+arrange(gapminder, gdpPercap) #assending
+arrange(gapminder, desc(gdpPercap)) #descending
+
+summarised_gdp <- gapminder %>% 
+        group_by(year) %>% 
+        summarise(mean_gdp_per_cap = mean(gdpPercap))
+
+gapminder %>%  # fet teh gapminder data
+        group_by(country) %>%  #group the data by country
+        summarise(average_lifeExp = mean(lifeExp), average_gdpPercap = mean(gdpPercap) ) %>% # calculate the summary data
+        arrange (desc(average_lifeExp)) %>%  #arrange data in descending order of avearge_lifeExp
+        filter(average_lifeExp == min(average_lifeExp) | average_lifeExp == max(average_lifeExp))
+
+
+#Coutning Data
+
+summarise(gapminder, num_rows = n()) # number rows in the dataset "gapminder"
+
+counts_country <- summarise(by_country, num_rows = n())       
+
+summarise(by_continent, num_rows = n())
+counts_country
+view(counts_country)
+
+#two list 1987 and 2007 
+# top 10 countties for life expectancy
+
+gapminder %>%
+        group_by(country)
+
+#Read in an excel file
+
+read_excel("data/gapminder.xlsx") # must load the read excel package called "read excel"
+
+library(readxl)
+                  
+  
+gapminder_excel <-  read_excel("data/gapminder.xlsx")              
+
+read_excel("data/gapminder.xlsx", range = "A1:E4")       
+read_excel("data/gapminder.xlsx", sheet = "gapminder",range = "A1:E4")        
+
+
+#writing data out
+
+?write_csv() #help for this fuction
+
+write_csv(gapminder_excel, "results/gapminder_output.csv")
+
+view("gapminder_output")
+
+view(gapminder_excel)
+
+View("caroline")
+
+Australian_data <- gapminder %>% 
+        filter(country == "Australia")
+write_csv(Australian_data, "results/Australian_Data_output")
