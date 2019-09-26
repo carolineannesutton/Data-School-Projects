@@ -43,8 +43,10 @@ Bom_Diff <- bom_sep %>%
   filter (temp_diff != "NA")
   
 Bom_Diff %>% 
-  arrange(desc(temp_diff)) %>% 
-  filter(temp_diff <0)
+  filter(temp_diff <0) %>% 
+  arrange(desc(temp_diff))
+
+
 
  
 
