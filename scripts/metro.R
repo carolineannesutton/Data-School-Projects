@@ -34,17 +34,57 @@ count(Bom_sumStation)
 
 
 # Question 2  Which month saw the lowest average daily temperature difference? (Sept 26)
+  #change the data to numberic and filter out the "NA"
 
 Bom_Diff <- bom_sep %>% 
   mutate (min = as.numeric(min)) %>% 
   mutate (max = as.numeric(max)) %>% 
   mutate (Rainfall = as.numeric(Rainfall)) %>% 
-  mutate(temp_diff =min - max) %>% 
+  mutate(temp_diff =max- min) %>% 
   filter (temp_diff != "NA")
+
+# calculate the aveage temperature diff per month. Must group by month first, then summarise mean
+# filter for the lowest value
   
-Bom_Diff %>% 
-  filter(temp_diff <0) %>% 
-  arrange(desc(temp_diff))
+Bom_Diff_Avg <- Bom_Diff %>%
+  group_by(Month) %>% 
+  summarise(temp_diff = mean(temp_diff)) %>%
+  filter(temp_diff == min(temp_diff))
+         
+ Bom_Diff_Avg
+  
+ 
+# Question 3
+# Which state saw the lowest average daily temperature difference
+ 
+ 
+ # gather data into 3 columns ID, type of data, actual data
+
+#gather(bom_st, Station_number, data, -info)
+ 
+BomSt_tidy <- gather(bom_st, Station_number, values, -info) # use bom_st, give sensible column names, tell it not to use "info" 
+BomSt_tidy
+
+#Spread Data - use the "info" (type of data) for colunm names and the actual data is in the "values" column.
+# "Station_number" is carried over for some reason (? thankfully)
+
+Bom_Staions_Tidy <-spread(BomSt_tidy, info, values) %>% 
+  mutate(Station_number = as.numeric(Station_number))  # making "Staion_number" numeric so it can compatible for both tables
+
+Bom_Staions_Tidy #check
+
+
+BOM_join <- full_join(Bom_Staions_Tidy,Bom_Diff) # create full join, it chose "Station_number"
+
+BOM_join %>% 
+  group_by(state) %>% 
+  summarise(temp_diff = mean(temp_diff)) %>% 
+  arrange(temp_diff) %>% 
+  filter(temp_diff == min(temp_diff))
+  
+
+  
+
 
 
 
